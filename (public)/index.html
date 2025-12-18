@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acortador de Enlaces</title>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>✂️ Acortador de Enlaces</h1>
+        <p>Pega tu link largo aquí:</p>
+        <input type="text" id="urlLarga" placeholder="ejemplo.com">
+        <p>Personaliza tu Link (Opcional)</p>
+        <div class="input-group">
+            <span>tu-web.app/?c=</span>
+            <input type="text" id="codigoPersonalizado" placeholder="codigo-personalizado">
+        </div>
+        <button id="btnAcortar">Acortar</button>
+        <div id="resultado"></div>
+        <div>
+            <button>
+                <a href="admin.html" style="text-decoration: none; color: white;">🔒 Panel de Control</a>
+            </button>
+        </div>
+    </div>
+
+
+    <script type="module" src="main.js"></script>
+
+</body>
+</html>

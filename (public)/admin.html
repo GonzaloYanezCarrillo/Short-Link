@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Acortador</title>
+    <link rel="stylesheet" href="styles.css">
+    <style> .container { max-width: 800px; } </style>
+</head>
+<body>
+
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>📊 Panel de Control</h1>
+            <a href="index.html" style="text-decoration: none; color: #666;">⬅ Volver</a>
+        </div>
+        
+        <p>Gestión de enlaces en tiempo real:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Alias (Código)</th>
+                    <th>Destino Original</th>
+                    <th style="text-align: center;">Visitas</th>
+                    <th style="text-align: center;">Acciones</th> </tr>
+            </thead>
+            <tbody id="tabla-cuerpo">
+                </tbody>
+        </table>
+        
+        <p id="loading" style="text-align: center; margin-top: 20px;">Cargando datos...</p>
+    </div>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
