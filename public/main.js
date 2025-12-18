@@ -64,67 +64,92 @@ if (codigoBuscado) {
 else {
     const boton = document.getElementById('btnAcortar');
     const inputUrl = document.getElementById('urlLarga');
-    const inputAlias = document.getElementById('codigoPersonalizado'); // <--- NUEVO
+    const inputAlias = document.getElementById('aliasInput');
     const resultadoDiv = document.getElementById('resultado');
 
-    boton.addEventListener('click', async () => {
-        let urlOriginal = inputUrl.value;
-        let codigoFinal = inputAlias.value.trim(); // .trim() quita espacios vacíos
+    // Verificamos que los elementos existan antes de agregar eventos
+    if (boton && inputUrl && resultadoDiv) {
+        
+        boton.addEventListener('click', async () => {
+            let urlOriginal = inputUrl.value;
+            let codigoFinal = inputAlias ? inputAlias.value.trim() : ""; // Validación por si no existe el input
 
-        // 1. Validación de URL
-        if (!urlOriginal.startsWith('http://') && !urlOriginal.startsWith('https://')) {
-            urlOriginal = 'https://' + urlOriginal;
-        }
-        if (urlOriginal.length < 5) return alert("URL muy corta");
-
-        boton.innerText = "Verificando...";
-        boton.disabled = true;
-        resultadoDiv.innerHTML = ""; // Limpiar mensajes anteriores
-
-        try {
-            // 2. Lógica del Alias (El Cerebro Nuevo)
-            if (codigoFinal) {
-                // A) Si el usuario escribió un alias, verificamos si existe
-                // Hacemos una consulta (Query) a la base de datos
-                const q = query(collection(db, "links"), where("codigo", "==", codigoFinal));
-                const snapshot = await getDocs(q);
-
-                if (!snapshot.empty) {
-                    // ¡Ups! Ya encontraron documentos con ese código
-                    throw new Error("⚠️ Ese nombre ya está en uso. ¡Elige otro!");
-                }
-                // Si pasamos aquí, el nombre está libre :)
-                
-            } else {
-                // B) Si no escribió nada, generamos uno aleatorio
-                codigoFinal = Math.random().toString(36).substring(2, 7);
+            // 1. Validación de URL
+            if (!urlOriginal) return alert("Escribe una URL");
+            
+            if (!urlOriginal.startsWith('http://') && !urlOriginal.startsWith('https://')) {
+                urlOriginal = 'https://' + urlOriginal;
             }
 
-            // 3. Guardamos en Firebase (Igual que antes, pero con codigoFinal)
-            await addDoc(collection(db, "links"), {
-                codigo: codigoFinal, // Aquí va el nombre (custom o random)
-                destino: urlOriginal,
-                clicks: 0,
-                creado: new Date()
-            });
+            // Cambiamos el estado del botón (Feedback visual)
+            const textoOriginal = boton.innerHTML;
+            boton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Acortando...';
+            boton.disabled = true;
+            resultadoDiv.innerHTML = ""; // Limpiar anterior
 
-            // 4. Mostrar Resultado
-            const urlFinal = `${window.location.origin}${window.location.pathname}?c=${codigoFinal}`;
-            
-            resultadoDiv.innerHTML = `
-                <div style="background: #d4edda; padding: 15px; border-radius: 5px; margin-top: 20px;">
-                    <p style="color: #155724;">✅ ¡Enlace creado!</p>
-                    <a href="${urlFinal}" target="_blank" style="font-weight: bold; font-size: 1.2em;">${urlFinal}</a>
-                </div>
-            `;
+            try {
+                // 2. Lógica del Alias
+                if (codigoFinal) {
+                    const q = query(collection(db, "links"), where("codigo", "==", codigoFinal));
+                    const snapshot = await getDocs(q);
 
-        } catch (e) {
-            console.error(e);
-            // Mostramos el error en rojo (útil para cuando el nombre está repetido)
-            resultadoDiv.innerHTML = `<p style="color: red; font-weight: bold;">${e.message}</p>`;
-        } finally {
-            boton.innerText = "Acortar";
-            boton.disabled = false;
-        }
-    });
+                    if (!snapshot.empty) {
+                        throw new Error("⚠️ Ese alias ya está ocupado.");
+                    }
+                } else {
+                    codigoFinal = Math.random().toString(36).substring(2, 7);
+                }
+
+                // 3. Guardar en Firebase
+                await addDoc(collection(db, "links"), {
+                    codigo: codigoFinal,
+                    destino: urlOriginal,
+                    clicks: 0,
+                    creado: new Date()
+                });
+
+                // 4. Mostrar Resultado con QR
+                const urlFinal = `${window.location.origin}${window.location.pathname}?c=${codigoFinal}`;
+                
+                resultadoDiv.innerHTML = `
+                    <div class="alert alert-success mt-3 text-center shadow-sm" role="alert">
+                        <h4 class="alert-heading"> ¡Listo!</h4>
+                        
+                        <a href="${urlFinal}" target="_blank" class="fs-5 fw-bold text-decoration-none text-success text-break">
+                            ${urlFinal}
+                        </a>
+                        
+                        <hr>
+                        <p class="mb-2">Escanea para compartir:</p>
+                        
+                        <div id="qrcode" class="d-flex justify-content-center my-3"></div>
+                    </div>
+                `;
+
+                // 5. Generar el QR (La Magia ✨)
+                // Le decimos: "Dibuja en el div 'qrcode' la dirección 'urlFinal'"
+                new QRCode(document.getElementById("qrcode"), {
+                    text: urlFinal,
+                    width: 128,  // Ancho
+                    height: 128, // Alto
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+
+            } catch (e) {
+                console.error(e);
+                // Mostrar Error (Estilo Bootstrap Rojo)
+                resultadoDiv.innerHTML = `
+                    <div class="alert alert-danger mt-3 text-center" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> ${e.message}
+                    </div>
+                `;
+            } finally {
+                // Restaurar botón
+                boton.innerHTML = textoOriginal;
+                boton.disabled = false;
+            }
+        });
+    }
 }

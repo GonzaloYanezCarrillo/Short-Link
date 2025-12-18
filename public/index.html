@@ -3,31 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acortador de Enlaces</title>
+    <title>LinkShort | Acortador Profesional</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="bg-light">
 
-    <div class="container">
-        <h1>✂️ Acortador de Enlaces</h1>
-        <p>Pega tu link largo aquí:</p>
-        <input type="text" id="urlLarga" placeholder="ejemplo.com">
-        <p>Personaliza tu Link (Opcional)</p>
-        <div class="input-group">
-            <span>tu-web.app/?c=</span>
-            <input type="text" id="codigoPersonalizado" placeholder="codigo-personalizado">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-link-45deg"></i> LinkShort
+            </a>
+            <div class="d-flex">
+                <a href="login.html" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-shield-lock"></i> Admin
+                </a>
+            </div>
         </div>
-        <button id="btnAcortar">Acortar</button>
-        <div id="resultado"></div>
-        <div>
-            <button>
-                <a href="admin.html" style="text-decoration: none; color: white;">🔒 Panel de Control</a>
-            </button>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                
+                <div class="card shadow-lg border-0 rounded-3">
+                    <div class="card-body p-5 text-center">
+                        
+                        <div class="mb-4">
+                            <h1 class="fw-bold text-primary">Acortador de Enlaces :D</h1>
+                            <p class="text-muted">Haz tus links más cortos, rastreables y profesionales.</p>
+                        </div>
+
+                        <div class="mb-4 text-start">
+                            <label for="urlLarga" class="form-label">Escribir URL</label>
+                            <input type="text" class="form-control" id="urlLarga" placeholder="https://ejemplo.com">
+                        </div>
+
+                        <div class="mb-4 text-start">
+                            <label for="aliasInput" class="form-label">Personaliza tu Acortador</label>
+                            <input type="text" class="form-control" id="aliasInput" placeholder="Alias Personalizado (Opcional)">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button id="btnAcortar" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+                                <i></i> Acortar URL
+                            </button>
+                        </div>
+
+                        <div id="resultado" class="mt-4 fade-in"></div>
+
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 text-muted small">
+                    <p>Gonzalo Yañez</p>
+                </div>
+
+            </div>
         </div>
     </div>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module" src="main.js"></script>
 
 </body>
